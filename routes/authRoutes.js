@@ -22,7 +22,7 @@ const {
     login,
     adminDashboard,
     userDashboard
-} = require('../controllers/ authController.js'); // Ensure the path is correct
+} = require('../controllers/authController.js'); // Ensure the path is correct
 
 // Define routes
 router.post('/register', registerUser);

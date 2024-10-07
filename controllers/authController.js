@@ -2,6 +2,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../modles/user'); // Ensure the correct path to the User model
+const { sendRegistrationEmail } = require('../services/emailService');
 
 // Secret key for JWT signing
 const secretKey = process.env.JWT_SECRET || 'your_jwt_secret'; // Use environment variable or default value
@@ -18,25 +19,33 @@ const generateToken = (user) => {
 // Register a new user
 const registerUser = async (req, res) => {
     const { firstName, lastName, email, password } = req.body;
+  
     try {
-        if (!firstName, !lastName, !email, !password) {
-            return res.status(400).json({ message: 'All fields are required' });
-        }
-
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: 'User already exists' });
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ firstName, lastName, email, password: hashedPassword, role: 'user' });
-        await newUser.save();
-
-        res.status(201).json({ message: 'User registered successfully' });
+      if (!firstName || !lastName || !email || !password) {
+        return res.status(400).json({ message: 'All fields are required' });
+      }
+  
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ message: 'User already exists' });
+      }
+  
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const newUser = new User({ firstName, lastName, email, password: hashedPassword, role: 'user' });
+      await newUser.save();
+  
+      // Send registration email
+      await sendRegistrationEmail(email, firstName);
+      
+      // Send welcome email
+      
+  
+      res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Error registering user', error: error.message });
+      res.status(500).json({ message: 'Error registering user', error: error.message });
     }
-};
+  };
+
 
 // Register a new admin
 const registerAdmin = async (req, res) => {

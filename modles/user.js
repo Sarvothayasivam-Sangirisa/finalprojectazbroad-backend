@@ -7,9 +7,10 @@ const userSchema = new mongoose.Schema({
   lastName: { type: String, required: true },  // Last name of the user
   email: { type: String, required: true, unique: true }, // Email address must be unique
   password: { type: String, required: true }, // Password field
-  role: { type: String, enum: ['user', 'admin'], default: 'user' } // Role with default value 'user'
+  role: { type: String, enum: ['user', 'admin'], default: 'admin' } // Role with default value 'user'
 });
 
 // Create and export the User model
 const User = mongoose.model('User', userSchema);
 module.exports = User;
+
