@@ -71,7 +71,7 @@ app.use("/api", bookingRoutes2);
 app.use("/api/admin", adminRoutes);
 app.use("/api/service-plans", servicePlanRoutes);
 app.use("/api/aichat", aiRoutes);
-
+app.use('/uploads', express.static('uploads'));
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
